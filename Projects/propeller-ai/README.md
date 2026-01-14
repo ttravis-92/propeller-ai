@@ -1,86 +1,87 @@
-# Propeller AI
+# Propeller AI - Propeller Design Platform
 
-Online propeller design and CFD analysis platform for UAV and eVTOL applications.
+## Quick Start
 
-## Features
+### Online Demo
+Visit: https://ttravis-92.github.io/propeller-ai/
 
-- **Parametric Design**: Define propeller geometry with diameter, blade count, chord/pitch/skew/rake distributions
-- **Airfoil Support**: NACA 4-digit and 5-digit series, plus custom airfoil upload
-- **3D Visualization**: Real-time Three.js preview with rotation animation
-- **BEMT Analysis**: Blade Element Momentum Theory for fast performance prediction
-- **Performance Curves**: Thrust, power, torque, and efficiency vs RPM
-- **J-T Diagram**: Efficiency map for advance ratio and RPM analysis
-- **Export**: Download STL or OBJ files for 3D printing or CFD
-- **Local Storage**: Save and load designs without login
+### Local Development
+1. Clone repository
+```bash
+git clone https://github.com/ttravis-92/propeller-ai.git
+cd propeller-ai
+```
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- npm or yarn
-
-### Installation
-
+2. Install dependencies
 ```bash
 npm install
 ```
 
-### Development
-
+3. Start development server
 ```bash
 npm run dev
 ```
+Open http://localhost:5173
 
-Open http://localhost:5173 in your browser.
-
-### Build
-
+### Build for Production
 ```bash
 npm run build
 ```
 
-The build output is in the `dist/` folder, ready for deployment to GitHub Pages.
+Deploy `dist/` folder to GitHub Pages or your preferred hosting service.
 
-## Deployment
+## Features
 
-### GitHub Pages
-
-1. Push this repository to GitHub
-2. Go to Repository Settings → Pages
-3. Select "GitHub Actions" as the source
-4. The site will be deployed automatically on push to main
-
-## Architecture
-
-```
-src/
-├── components/
-│   ├── PropellerForm.vue      # Parameter input forms
-│   ├── PropellerPreview.vue   # Three.js 3D preview
-│   └── PerformanceCharts.vue  # ECharts performance plots
-├── core/
-│   ├── airfoils.ts            # NACA/custom airfoil generation
-│   ├── bemt.ts                # BEMT solver engine
-│   └── geometry.ts            # 3D geometry generation
-├── services/
-│   └── storage.ts             # Local storage management
-├── stores/
-│   └── propeller.ts           # Pinia state management
-└── types/
-    └── index.ts               # TypeScript definitions
-```
+- **Parametric Design**: Define propeller geometry with diameter, blade count, chord/pitch/skew/rake distributions
+- **Airfoil Support**: 10+ preset UAV airfoils with real polar data (Re: 50k-500k)
+- **3D Visualization**: Real-time Three.js preview with realistic airfoil shapes and rotation animation
+- **BEMT Analysis**: Blade Element Momentum Theory with real airfoil polar data integration
+- **Performance Curves**: Thrust, power, torque, and efficiency vs RPM
+- **J-T Diagram**: Efficiency contour map for advance ratio and RPM analysis
+- **Export**: Download STL or OBJ files for 3D printing or CFD analysis
+- **Local Storage**: Save and load designs without login
+- **Templates**: Pre-configured propeller templates for different applications
+- **Internationalization**: English and Chinese language support
 
 ## Technologies
 
-- **Vue 3** - Frontend framework
-- **TypeScript** - Type safety
-- **Vite** - Build tool
+- **Vue 3 + TypeScript** - Frontend framework
 - **Three.js** - 3D visualization
 - **ECharts** - Performance charts
 - **Element Plus** - UI components
+- **Vite** - Build tool
 - **Pinia** - State management
 
-## License
+## Preset Airfoils
 
-MIT
+The platform includes 10 carefully selected airfoils with complete polar data:
+
+### Symmetric Airfoils
+- **NACA 0012**: Classic symmetric airfoil, widely used for propellers
+
+### Cambered Airfoils
+- **NACA 2412**: Moderate camber, good for general propeller applications
+- **NACA 4412**: High camber airfoil for maximum lift
+- **S1223**: High-lift airfoil, excellent for low Reynolds number applications
+- **MH 32**: Thin, high-performance racing airfoil
+- **Clark Y**: Flat-bottom airfoil with excellent stall characteristics
+- **RG 15**: Efficient airfoil for low Reynolds number applications
+- **E423**: Eppler E423 airfoil, good for UAV applications
+- **GOE 398**: Goettingen airfoil for model aircraft
+- **FX 76-MP140**: High performance model aircraft airfoil
+
+---
+
+## Status
+
+✅ **Website**: https://ttravis-92.github.io/propeller-ai/
+✅ **GitHub Pages**: Deployed successfully
+✅ **Features**: All core functionality implemented
+✅ **Airfoil Database**: 10 airfoils with polar data
+✅ **3D Visualization**: Realistic airfoil shapes
+✅ **BEMT Analysis**: Performance prediction engine
+✅ **Export**: STL/OBJ file download
+
+---
+
+*Last updated: January 14, 2026*
