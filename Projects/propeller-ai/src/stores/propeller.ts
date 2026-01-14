@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia';
 import { ref, computed, watch } from 'vue';
-import type { PropellerParams, PerformanceCurves, EfficiencyMap, OperatingConditions } from '../types';
+import type { PropellerParams, PerformanceCurves, EfficiencyMap, OperatingConditions, AirfoilPolar } from '../types';
 import { StorageService } from '../services/storage';
 import { BEMTSolver } from '../core/bemt';
 import { PropellerGeometry } from '../core/geometry';
+import { loadAirfoilDatabase, getAvailableAirfoils, getPolarForAirfoil } from '../services/airfoil-database';
 
 export const usePropellerStore = defineStore('propeller', () => {
   const currentDesign = ref<PropellerParams>(StorageService.createDefaultDesign());
@@ -18,9 +19,34 @@ export const usePropellerStore = defineStore('propeller', () => {
   });
   const isCalculating = ref(false);
   const lastCalculationResult = ref<any>(null);
+  const availableAirfoils = ref<Array<{ id: string; name: string; type: string; thickness: number; camber: number }>>([]);
+  const isAirfoilDatabaseLoaded = ref(false);
 
   const diameter = computed(() => currentDesign.value.diameter);
   const numBlades = computed(() => currentDesign.value.numBlades);
+
+  async function initializeAirfoilDatabase(): Promise<void> {
+    if (isAirfoilDatabaseLoaded.value) return;
+
+    try {
+      await loadAirfoilDatabase();
+      availableAirfoils.value = getAvailableAirfoils();
+      isAirfoilDatabaseLoaded.value = true;
+    } catch (error) {
+      console.error('Failed to load airfoil database:', error);
+    }
+  }
+
+  function selectPresetAirfoil(airfoilId: string): void {
+    const polar = getPolarForAirfoil(airfoilId, 100000);
+    if (polar) {
+      currentDesign.value.airfoil = {
+        type: 'custom',
+        name: airfoilId,
+        polarData: polar as AirfoilPolar
+      };
+    }
+  }
 
   function loadSavedDesigns(): void {
     savedDesigns.value = StorageService.loadAllDesigns();
@@ -144,6 +170,10 @@ export const usePropellerStore = defineStore('propeller', () => {
     lastCalculationResult,
     diameter,
     numBlades,
+    availableAirfoils,
+    isAirfoilDatabaseLoaded,
+    initializeAirfoilDatabase,
+    selectPresetAirfoil,
     loadSavedDesigns,
     saveCurrentDesign,
     loadDesign,

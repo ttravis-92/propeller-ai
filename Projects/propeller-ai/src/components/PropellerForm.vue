@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { usePropellerStore } from '../stores/propeller';
 import { NACA_4_DIGIT_AIRFOILS, NACA_5_DIGIT_AIRFOILS } from '../types';
@@ -20,6 +20,10 @@ const pitchPoints = ref<{r: number, p: number}[]>([]);
 const skewPoints = ref<{r: number, s: number}[]>([]);
 const rakePoints = ref<{r: number, rk: number}[]>([]);
 
+onMounted(async () => {
+  await store.initializeAirfoilDatabase();
+});
+
 watch(designName, (val) => {
   store.currentDesign.name = val;
 });
@@ -38,6 +42,12 @@ watch(useCustomAirfoil, (val) => {
     store.currentDesign.airfoil.code = '2412';
   }
 });
+
+function selectPresetAirfoil(airfoilId: string): void {
+  store.selectPresetAirfoil(airfoilId);
+  useCustomAirfoil.value = true;
+  ElMessage.success(`Airfoil "${airfoilId}" selected`);
+}
 
 function initDistributionPoints(): void {
   const r = store.currentDesign.diameter / 2;
@@ -231,6 +241,27 @@ initDistributionPoints();
       </el-tab-pane>
 
       <el-tab-pane :label="t('tabs.airfoil')" name="airfoil">
+        <div class="form-section">
+          <h3>{{ t('airfoil.preset') }}</h3>
+          <div v-if="store.isAirfoilDatabaseLoaded && store.availableAirfoils.length > 0" class="preset-airfoils">
+            <el-tag
+              v-for="airfoil in store.availableAirfoils"
+              :key="airfoil.id"
+              class="airfoil-tag"
+              :type="store.currentDesign.airfoil.name === airfoil.id ? 'success' : 'info'"
+              @click="selectPresetAirfoil(airfoil.id)"
+            >
+              {{ airfoil.name }}
+            </el-tag>
+          </div>
+          <el-progress
+            v-else-if="!store.isAirfoilDatabaseLoaded"
+            :percentage="100"
+            :indeterminate="true"
+            :show-text="false"
+          />
+        </div>
+
         <div class="form-section">
           <h3>{{ t('airfoil.title') }}</h3>
           <el-radio-group v-model="useCustomAirfoil" style="margin-bottom: 15px;">
@@ -495,5 +526,21 @@ initDistributionPoints();
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.preset-airfoils {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.airfoil-tag {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.airfoil-tag:hover {
+  transform: scale(1.05);
 }
 </style>

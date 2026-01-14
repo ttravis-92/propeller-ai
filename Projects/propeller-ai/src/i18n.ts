@@ -43,6 +43,7 @@ const messages = {
     },
     airfoil: {
       title: 'Airfoil Selection',
+      preset: 'Preset Airfoils',
       standard: 'Standard',
       custom: 'Custom',
       upload: 'Upload File',
@@ -169,6 +170,7 @@ const messages = {
     },
     airfoil: {
       title: '翼型选择',
+      preset: '预设翼型',
       standard: '标准翼型',
       custom: '自定义翼型',
       upload: '上传文件',

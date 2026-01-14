@@ -115,3 +115,31 @@ export const NACA_5_DIGIT_AIRFOILS = [
   '25110', '25112', '25115', '25118', '25120', '25124',
   '44112', '44118', '44212', '44218'
 ];
+
+export interface AirfoilDatabase {
+  metadata: {
+    description: string;
+    reynoldsRange: string;
+    lastUpdated: string;
+  };
+  airfoils: {
+    [key: string]: {
+      name: string;
+      type: string;
+      description: string;
+      thickness: number;
+      camber: number;
+      polars: {
+        [key: string]: {
+          reynolds: number;
+          data: Array<{
+            alpha: number;
+            cl: number;
+            cd: number;
+            cm?: number;
+          }>;
+        };
+      };
+    };
+  };
+}
